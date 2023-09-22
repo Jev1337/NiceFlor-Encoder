@@ -26,12 +26,12 @@ To generate new codes, you increase the code count, for example:
 
 ```python
 send(0x00000000, 1, 2)
-                          ^
+                    ^
 ```
 To use another button, you increase the button count, for example:
 ```python
 send(0x00000000, 2, 1)
-                       ^
+                 ^
 ```
 Output Example:
 ```
