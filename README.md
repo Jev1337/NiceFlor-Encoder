@@ -19,18 +19,18 @@ Install by cloning project or downloading source code
 Modify the following lines and make sure you change them with the desired codes (In Hexadecimal):
 
 ```python
-      send(0x00000000, 1, 1)
+send(0x00000000, 1, 1)
 ```
 
 To generate new codes, you increase the code count, for example:
 
 ```python
-      send(0x00000000, 1, 2)
+send(0x00000000, 1, 2)
                           ^
 ```
 To use another button, you increase the button count, for example:
 ```python
-      send(0x00000000, 2, 1)
+send(0x00000000, 2, 1)
                        ^
 ```
 Output Example:
@@ -74,6 +74,7 @@ This is tested on:
 ## Credits
 
 [Kaiju](https://rolling.pandwarf.com/): This helped me with confirming that the code works perfectly.
+
 [rtl_433](https://github.com/merbanan/rtl_433/): This helped me with the python code, as it was not originaly mine. I modified it in a way it displays the encbuff which we use to transmit using RF433_Send library on Arduino
 
 ## License
