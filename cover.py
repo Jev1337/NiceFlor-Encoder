@@ -1,7 +1,5 @@
-from __future__ import annotations
 
 import logging
-
 import time
 
 
@@ -9,83 +7,53 @@ from encode_tables import (
     NICE_FLOR_S_TABLE_ENCODE,
     NICE_FLOR_S_TABLE_KI,
 )
-from threading import Lock
 
 
-_LOGGER = logging.getLogger(__name__)
+tx_pulse_short = 500
+tx_pulse_long = 1000
+tx_pulse_sync = 1500
+tx_pulse_gap = 15000
+tx_length = 52
 
+def tx_code(code: int):
+    wf = []
+    wf.extend(tx_sync())
+    rawcode = format(code, "#0{}b".format(tx_length))[2:]
+    for bit in range(0, tx_length):
+        if rawcode[bit] == "1":
+            wf.extend(tx_l0())
+        else:
+            wf.extend(tx_l1())
+    wf.extend(tx_sync())
+    wf.extend(tx_gap())
+    return wf
+def tx_l0():
+    return [
+        print(tx_pulse_short),
+        print(tx_pulse_long),
+    ]
 
+def tx_l1():
+    return [
+        print(tx_pulse_long),
+        print(tx_pulse_short),
+    ]
 
-class RFDevice:
-    def __init__(
-        self,
-        gpio: int,
-        pi: 1,
-    ) -> None:
-        self._pi = pi
-        self._gpio = gpio
-        self.tx_pulse_short = 500
-        self.tx_pulse_long = 1000
-        self.tx_pulse_sync = 1500
-        self.tx_pulse_gap = 15000
-        self.tx_length = 52
+def tx_sync():
+    return [
+        print(tx_pulse_sync),
+        print(tx_pulse_sync),
+    ]
 
-    def tx_code(self, code: int):
-        wf = []
-        wf.extend(self.tx_sync())
-        rawcode = format(code, "#0{}b".format(self.tx_length))[2:]
-        for bit in range(0, self.tx_length):
-            if rawcode[bit] == "1":
-                wf.extend(self.tx_l0())
-            else:
-                wf.extend(self.tx_l1())
-        wf.extend(self.tx_sync())
-        wf.extend(self.tx_gap())
-
-        while self._pi.wave_tx_busy():
-            time.sleep(0.1)
-
-        self._pi.wave_clear()
-        self._pi.wave_add_generic(wf)
-        wave = self._pi.wave_create()
-        self._pi.wave_send_once(wave)
-
-        while self._pi.wave_tx_busy():
-            time.sleep(0.1)
-
-        self._pi.wave_delete(wave)
-
-    def tx_l0(self):
-        return [
-            print(self._gpio, None, self.tx_pulse_short),
-            print(None, self._gpio, self.tx_pulse_long),
-        ]
-
-    def tx_l1(self):
-        return [
-            print(self._gpio, None, self.tx_pulse_long),
-            print(None, self._gpio, self.tx_pulse_short),
-        ]
-
-    def tx_sync(self):
-        return [
-            print(self._gpio, None, self.tx_pulse_sync),
-            print(None, self._gpio, self.tx_pulse_sync),
-        ]
-
-    def tx_gap(self):
-        return [
-            print(None, self._gpio, self.tx_pulse_gap),
-        ]
+def tx_gap():
+    return [
+        print(tx_pulse_gap),
+    ]
 
 
 def pair(button_id, code, serial):
-        _LOGGER.info("Starting pairing of %s... Wait 5 seconds.", hex(serial))
-
         for _ in range(1, 10):
             _send_repeated(serial, button_id, code)
-
-        _LOGGER.info("Entered pairing mode for %s.", hex(serial))
 
 def send(serial: int, button_id: int, code: int):
     _send_repeated(serial, button_id, code)
@@ -94,13 +62,6 @@ def send(serial: int, button_id: int, code: int):
 def _send_repeated(serial: int, button_id: int, code: int):
     for repeat in range(1, 7):
         tx_code = _nice_flor_s_encode(serial, code, button_id, repeat)
-        _LOGGER.info(
-            "serial %s, button_id %i, code %i, tx_code %s",
-            hex(serial),
-            button_id,
-            code,
-            hex(tx_code),
-        )
         print("TX Code: ", hex(tx_code))
 
 def encode(encbuff):
@@ -143,4 +104,4 @@ def _nice_flor_s_encode(
     return encode(encbuff)
 
 
-send(0x00A5D8B8, 1, 0x5bed)
+send(0x00E48DCA,1,3)
