@@ -1,4 +1,4 @@
-<img src="Nice.png" width="50"></img>
+<img src="Nice.png" width="100"></img>
 
 # NiceFlor Encoder
 A Python code that once provided with the right information, generates a Hexadecimal String that allows you to retransmit via a Transceiver.
