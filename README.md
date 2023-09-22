@@ -73,7 +73,7 @@ This is tested on:
 
 ## Credits
 
-[Kaiju](https://rolling.pandwarf.com/): This helped me with confirming that the code works perfectly.
+[Kaiju](https://rolling.pandwarf.com/): This helped me with confirming that the encoder works perfectly.
 
 [rtl_433](https://github.com/merbanan/rtl_433/): This helped me with the python code, as it was not originaly mine. I modified it in a way it displays the encbuff which we use to transmit using RF433_Send library on Arduino
 
