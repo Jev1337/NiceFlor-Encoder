@@ -88,6 +88,7 @@ def _nice_flor_s_encode(
 
     encbuff = [None] * 7
     enccode = NICE_FLOR_S_TABLE_ENCODE[code]
+    
     ki = NICE_FLOR_S_TABLE_KI[code & 0xFF] ^ (enccode & 0xFF)
 
     encbuff[0] = button_id & 0x0F
@@ -104,4 +105,4 @@ def _nice_flor_s_encode(
     return encode(encbuff)
 
 
-send(0x00E48DCA,1,3)
+send(0x00E48DCA,1,2)
