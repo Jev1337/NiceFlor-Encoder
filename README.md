@@ -58,7 +58,7 @@ This allows you to clone your remote using cheap RF433 modules with an Arduino o
 
 #### Is this illegal?
 
-Cloning a remote is illegal in some countries, as capturing signals itself is illegal. So use at your own risk, this is only for educational purposes.
+Cloning a remote is illegal in some countries. So use at your own risk, this is only for educational purposes.
 
 
 ## Optimizations
