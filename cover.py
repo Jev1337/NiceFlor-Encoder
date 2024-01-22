@@ -1,5 +1,3 @@
-
-import logging
 import time
 
 
@@ -9,46 +7,6 @@ from encode_tables import (
 )
 
 
-tx_pulse_short = 500
-tx_pulse_long = 1000
-tx_pulse_sync = 1500
-tx_pulse_gap = 15000
-tx_length = 52
-
-def tx_code(code: int):
-    wf = []
-    wf.extend(tx_sync())
-    rawcode = format(code, "#0{}b".format(tx_length))[2:]
-    for bit in range(0, tx_length):
-        if rawcode[bit] == "1":
-            wf.extend(tx_l0())
-        else:
-            wf.extend(tx_l1())
-    wf.extend(tx_sync())
-    wf.extend(tx_gap())
-    return wf
-def tx_l0():
-    return [
-        print(tx_pulse_short),
-        print(tx_pulse_long),
-    ]
-
-def tx_l1():
-    return [
-        print(tx_pulse_long),
-        print(tx_pulse_short),
-    ]
-
-def tx_sync():
-    return [
-        print(tx_pulse_sync),
-        print(tx_pulse_sync),
-    ]
-
-def tx_gap():
-    return [
-        print(tx_pulse_gap),
-    ]
 
 
 def pair(button_id, code, serial):
@@ -106,3 +64,65 @@ def _nice_flor_s_encode(
 
 
 send(0x00E48DCA,1,1)
+
+
+
+
+
+
+
+
+# =====================================================================================
+
+# PIGPIO
+import pigpio
+
+
+tx_pulse_short = 500
+tx_pulse_long = 1000
+tx_pulse_sync = 1500
+tx_pulse_gap = 15000
+tx_length = 52
+
+def get(code: int):
+    wf = []
+    wf.extend(tx_sync())
+    rawcode = format(code, "#0{}b".format(tx_length))[2:]
+    for bit in range(0, tx_length):
+        if rawcode[bit] == "1":
+            wf.extend(tx_l0())
+        else:
+            wf.extend(tx_l1())
+    wf.extend(tx_sync())
+    wf.extend(tx_gap())
+    for i, pulse in enumerate(wf):
+        print(f"Pulse {i + 1}:")
+        print(f"  GPIO ON: {pulse.gpio_on}")
+        print(f"  GPIO OFF: {pulse.gpio_off}")
+        print(f"  Delay: {pulse.delay} microseconds")
+        print("---")
+    return wf
+def tx_l0():
+    return [
+        pigpio.pulse(1, 0, tx_pulse_short),
+        pigpio.pulse(0, 1, tx_pulse_long),
+    ]
+
+def tx_l1():
+    return [
+        pigpio.pulse(0, 1, tx_pulse_long),
+        pigpio.pulse(0, 0, tx_pulse_short),
+    ]
+
+def tx_sync():
+    return [
+        pigpio.pulse(1, 0, tx_pulse_sync),
+        pigpio.pulse(0, 1, tx_pulse_sync),
+    ]
+
+def tx_gap():
+    return [
+        pigpio.pulse(0, 1, tx_pulse_gap),
+    ]
+
+
