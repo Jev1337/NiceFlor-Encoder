@@ -105,4 +105,4 @@ def _nice_flor_s_encode(
     return encode(encbuff)
 
 
-send(0x00E48DCA,1,2)
+send(0x00E48DCA,1,1)
