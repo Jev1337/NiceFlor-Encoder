@@ -111,7 +111,7 @@ def tx_l0():
 def tx_l1():
     return [
         pigpio.pulse(0, 1, tx_pulse_long),
-        pigpio.pulse(0, 0, tx_pulse_short),
+        pigpio.pulse(1, 0, tx_pulse_short),
     ]
 
 def tx_sync():
